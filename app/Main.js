@@ -4,11 +4,16 @@ import { LinearGradient } from 'expo';
 
 import { gradientStart, gradientEnd } from './utils/Colors';
 import Header from './components/Header';
+import Input from './components/Input';
 
 const headerTitle = 'Todo';
 
 export default class Main extends React.Component {
+	state = {
+		inputValue: ''
+	};
 	render() {
+		const { inputValue } = this.state;
 		return (
 			<LinearGradient
 				colors={[gradientStart, gradientEnd]}
@@ -17,6 +22,9 @@ export default class Main extends React.Component {
 				<StatusBar barStyle="light-content" />
 				<View style={styles.centered}>
 					<Header title={headerTitle} />
+				</View>
+				<View>
+					<Input inputValue={inputValue} />
 				</View>
 			</LinearGradient>
 		);
