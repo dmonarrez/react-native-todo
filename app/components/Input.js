@@ -7,7 +7,7 @@ const title = "What's Next?";
 
 class Input extends Component {
 	render() {
-		const { inputValue } = this.props;
+		const { inputValue, onChangeText } = this.props;
 		return (
 			<View style={styles.container} behavior="padding" enabled>
 				<Text style={[styles.titleText, { color: lightWhite }]}>
@@ -16,6 +16,7 @@ class Input extends Component {
 				<TextInput
 					style={styles.input}
 					value={inputValue}
+					onChangeText={onChangeText}
 					placeholder="Type here to add note."
 					placeholderTextColor={inputPlaceholder}
 					multiline={true}

@@ -12,6 +12,13 @@ export default class Main extends React.Component {
 	state = {
 		inputValue: ''
 	};
+
+	newInputValue = value => {
+		this.setState({
+			inputValue: value
+		});
+	};
+
 	render() {
 		const { inputValue } = this.state;
 		return (
@@ -24,7 +31,7 @@ export default class Main extends React.Component {
 					<Header title={headerTitle} />
 				</View>
 				<View>
-					<Input inputValue={inputValue} />
+					<Input inputValue={inputValue} onChangeText={this.newInputValue} />
 				</View>
 			</LinearGradient>
 		);
