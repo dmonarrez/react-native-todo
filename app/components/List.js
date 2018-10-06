@@ -8,10 +8,10 @@ import {
 	TouchableOpacity
 } from 'react-native';
 
-import { lighterWhite } from '../utils/Colors';
+import { lighterWhite, checkmarkInactive, itemListText } from '../utils/Colors';
 
 const title = 'Recent Notes';
-const { height, width } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 class List extends Component {
 	state = {
@@ -28,14 +28,15 @@ class List extends Component {
 				</View>
 				<View style={styles.listItemContainer}>
 					<TouchableOpacity>
-						<View style={styles.circle} />
+						<View style={[styles.circle, { borderColor: checkmarkInactive }]} />
 					</TouchableOpacity>
-					<Text>Item 1</Text>
+					<Text style={[styles.text, { color: itemListText }]}>Item 1</Text>
 				</View>
 				<View style={styles.listItemContainer}>
 					<TouchableOpacity>
-						<View style={styles.circle} />
+						<View style={[styles.circle, { borderColor: checkmarkInactive }]} />
 					</TouchableOpacity>
+					<Text style={[styles.text, { color: itemListText }]}>Item 2</Text>
 				</View>
 			</ScrollView>
 		);
@@ -69,9 +70,12 @@ const styles = StyleSheet.create({
 		width: 30,
 		height: 30,
 		borderRadius: 15,
-		borderColor: 'red',
 		borderWidth: 3,
 		marginRight: 20
+	},
+	text: {
+		fontWeight: '500',
+		fontSize: 16
 	}
 });
 
