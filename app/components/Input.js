@@ -9,7 +9,7 @@ class Input extends Component {
 	render() {
 		const { inputValue, onChangeText } = this.props;
 		return (
-			<View style={styles.container} behavior="padding" enabled>
+			<View style={styles.container}>
 				<Text style={[styles.titleText, { color: lightWhite }]}>
 					{title.toUpperCase()}
 				</Text>
