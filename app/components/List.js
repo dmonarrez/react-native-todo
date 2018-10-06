@@ -5,7 +5,8 @@ import {
 	ScrollView,
 	StyleSheet,
 	Dimensions,
-	TouchableOpacity
+	TouchableOpacity,
+	Platform
 } from 'react-native';
 
 import { lighterWhite, checkmarkInactive, itemListText } from '../utils/Colors';
@@ -64,7 +65,21 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 		backgroundColor: 'white',
 		flexDirection: 'row',
-		alignItems: 'center'
+		alignItems: 'center',
+		...Platform.select({
+			ios: {
+				shadowColor: 'rgb(50,50,50)',
+				shadowOpacity: 0.8,
+				shadowRadius: 2,
+				shadowOffset: {
+					height: 2,
+					width: 0
+				}
+			},
+			android: {
+				elevation: 5
+			}
+		})
 	},
 	circle: {
 		width: 30,

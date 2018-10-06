@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TextInput, Keyboard } from 'react-native';
+import { View, Text, StyleSheet, TextInput } from 'react-native';
 
 import { lightWhite, inputPlaceholder } from '../utils/Colors';
 
