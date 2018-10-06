@@ -23,7 +23,7 @@ class Input extends Component {
 					autoCapitalize="sentences"
 					underlineColorAndroid="transparent"
 					selectionColor={'white'}
-					maxLength={240}
+					maxLength={60}
 					returnKeyType="done"
 					autoCorrect={false}
 					blurOnSubmit={true}

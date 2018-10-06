@@ -50,6 +50,6 @@ const styles = StyleSheet.create({
 		alignItems: 'center'
 	},
 	list: {
-		marginVertical: 150
+		marginVertical: 50
 	}
 });
