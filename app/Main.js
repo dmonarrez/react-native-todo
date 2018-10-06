@@ -1,8 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo';
 
 import { gradientStart, gradientEnd } from './utils/Colors';
+import Header from './components/Header';
+
+const headerTitle = 'Todo';
 
 export default class Main extends React.Component {
 	render() {
@@ -11,7 +14,10 @@ export default class Main extends React.Component {
 				colors={[gradientStart, gradientEnd]}
 				style={styles.container}
 			>
-				<Text>Open up App.js to start working on your app!</Text>
+				<StatusBar barStyle="light-content" />
+				<View style={styles.centered}>
+					<Header title={headerTitle} />
+				</View>
 			</LinearGradient>
 		);
 	}
@@ -20,5 +26,8 @@ export default class Main extends React.Component {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1
+	},
+	centered: {
+		alignItems: 'center'
 	}
 });
