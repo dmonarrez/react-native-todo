@@ -4,4 +4,6 @@ export const lightWhite = '#fcefe9';
 export const inputPlaceholder = '#f1a895';
 export const lighterWhite = '#f4e4e2';
 export const checkmarkInactive = '#ecbfbe';
+export const checkmarkActive = '#90ee90';
 export const itemListText = '#555555';
+export const itemListTextStrike = '#c4c4cc';

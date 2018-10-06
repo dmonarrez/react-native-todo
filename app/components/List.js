@@ -9,17 +9,36 @@ import {
 	Platform
 } from 'react-native';
 
-import { lighterWhite, checkmarkInactive, itemListText } from '../utils/Colors';
+import {
+	lighterWhite,
+	checkmarkInactive,
+	itemListText,
+	checkmarkActive,
+	itemListTextStrike
+} from '../utils/Colors';
 
 const title = 'Recent Notes';
 const { width } = Dimensions.get('window');
 
 class List extends Component {
 	state = {
-		isEditing: false
+		isEditing: false,
+		isCompleted: false
+	};
+
+	toggleItem = () => {
+		this.setState(prevState => {
+			return {
+				isCompleted: !prevState.isCompleted
+			};
+		});
+		// TODO: remove this!
+		alert('Pressed!');
 	};
 
 	render() {
+		const { isCompleted } = this.state;
+
 		return (
 			<ScrollView style={styles.container}>
 				<View style={styles.titleContainer}>
@@ -28,13 +47,32 @@ class List extends Component {
 					</Text>
 				</View>
 				<View style={styles.listItemContainer}>
-					<TouchableOpacity>
-						<View style={[styles.circle, { borderColor: checkmarkInactive }]} />
+					<TouchableOpacity onPress={this.toggleItem}>
+						<View
+							style={[
+								styles.circle,
+								isCompleted
+									? { borderColor: checkmarkActive }
+									: { borderColor: checkmarkInactive }
+							]}
+						/>
 					</TouchableOpacity>
-					<Text style={[styles.text, { color: itemListText }]}>Item 1</Text>
+					<Text
+						style={[
+							styles.text,
+							isCompleted
+								? {
+										color: itemListTextStrike,
+										textDecorationLine: 'line-through'
+								  }
+								: { color: itemListText }
+						]}
+					>
+						Item 1
+					</Text>
 				</View>
 				<View style={styles.listItemContainer}>
-					<TouchableOpacity>
+					<TouchableOpacity onPress={this.toggleItem}>
 						<View style={[styles.circle, { borderColor: checkmarkInactive }]} />
 					</TouchableOpacity>
 					<Text style={[styles.text, { color: itemListText }]}>Item 2</Text>
