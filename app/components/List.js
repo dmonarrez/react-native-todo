@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, StyleSheet, Dimensions } from 'react-native';
+import {
+	View,
+	Text,
+	ScrollView,
+	StyleSheet,
+	Dimensions,
+	TouchableOpacity
+} from 'react-native';
 
 import { lighterWhite } from '../utils/Colors';
 
@@ -20,10 +27,15 @@ class List extends Component {
 					</Text>
 				</View>
 				<View style={styles.listItemContainer}>
+					<TouchableOpacity>
+						<View style={styles.circle} />
+					</TouchableOpacity>
 					<Text>Item 1</Text>
 				</View>
 				<View style={styles.listItemContainer}>
-					<Text>Item 2 </Text>
+					<TouchableOpacity>
+						<View style={styles.circle} />
+					</TouchableOpacity>
 				</View>
 			</ScrollView>
 		);
@@ -52,6 +64,14 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white',
 		flexDirection: 'row',
 		alignItems: 'center'
+	},
+	circle: {
+		width: 30,
+		height: 30,
+		borderRadius: 15,
+		borderColor: 'red',
+		borderWidth: 3,
+		marginRight: 20
 	}
 });
 
