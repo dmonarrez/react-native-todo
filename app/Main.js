@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo';
 
 import { gradientStart, gradientEnd } from './utils/Colors';
 import Header from './components/Header';
+import SubTitle from './components/SubTitle';
 import Input from './components/Input';
 import List from './components/List';
 
@@ -31,10 +32,13 @@ export default class Main extends React.Component {
 				<View style={styles.centered}>
 					<Header title={headerTitle} />
 				</View>
-				<View>
+				<View style={styles.inputContainer}>
+					<SubTitle subtitle={"What's Next"} />
 					<Input inputValue={inputValue} onChangeText={this.newInputValue} />
 				</View>
+
 				<View style={styles.list}>
+					<SubTitle subtitle={'Recent Notes'} />
 					<List />
 				</View>
 			</LinearGradient>
@@ -49,7 +53,13 @@ const styles = StyleSheet.create({
 	centered: {
 		alignItems: 'center'
 	},
+	inputContainer: {
+		marginTop: 40,
+		paddingLeft: 15
+	},
 	list: {
-		marginVertical: 50
+		flex: 1,
+		marginTop: 70,
+		paddingLeft: 15
 	}
 });

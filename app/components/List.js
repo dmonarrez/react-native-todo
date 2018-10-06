@@ -2,98 +2,75 @@ import React, { Component } from 'react';
 import {
 	View,
 	Text,
-	ScrollView,
 	StyleSheet,
 	Dimensions,
+	ScrollView,
 	TouchableOpacity,
 	Platform
 } from 'react-native';
 
 import {
 	lighterWhite,
-	checkmarkInactive,
 	itemListText,
-	checkmarkActive,
-	itemListTextStrike
+	itemListTextStrike,
+	circleInactive,
+	circleActive
 } from '../utils/Colors';
 
-const title = 'Recent Notes';
 const { width } = Dimensions.get('window');
 
 class List extends Component {
 	state = {
-		isEditing: false,
-		isCompleted: false
+		isCompleted: false,
+		listItems: [{ id: 1, content: 'Item 1' }, { id: 2, content: 'Item 2' }]
 	};
 
-	toggleItem = () => {
+	toggleComplete = () => {
 		this.setState(prevState => {
 			return {
 				isCompleted: !prevState.isCompleted
 			};
 		});
-		// TODO: remove this!
-		alert('Pressed!');
 	};
 
 	render() {
 		const { isCompleted } = this.state;
 
 		return (
-			<ScrollView style={styles.container}>
-				<View style={styles.titleContainer}>
-					<Text style={[styles.titleText, { color: lighterWhite }]}>
-						{title.toUpperCase()}
-					</Text>
-				</View>
-				<View style={styles.listItemContainer}>
-					<TouchableOpacity onPress={this.toggleItem}>
-						<View
+			<ScrollView>
+				{this.state.listItems.map(item => (
+					<View style={styles.listItemContainer} key={item.id}>
+						<TouchableOpacity onPress={this.toggleComplete}>
+							<View
+								style={[
+									styles.circle,
+									isCompleted
+										? { borderColor: circleActive }
+										: { borderColor: circleInactive }
+								]}
+							/>
+						</TouchableOpacity>
+						<Text
 							style={[
-								styles.circle,
+								styles.text,
 								isCompleted
-									? { borderColor: checkmarkActive }
-									: { borderColor: checkmarkInactive }
+									? {
+											color: itemListTextStrike,
+											textDecorationLine: 'line-through'
+									  }
+									: { color: itemListText }
 							]}
-						/>
-					</TouchableOpacity>
-					<Text
-						style={[
-							styles.text,
-							isCompleted
-								? {
-										color: itemListTextStrike,
-										textDecorationLine: 'line-through'
-								  }
-								: { color: itemListText }
-						]}
-					>
-						Item 1
-					</Text>
-				</View>
-				<View style={styles.listItemContainer}>
-					<TouchableOpacity onPress={this.toggleItem}>
-						<View style={[styles.circle, { borderColor: checkmarkInactive }]} />
-					</TouchableOpacity>
-					<Text style={[styles.text, { color: itemListText }]}>Item 2</Text>
-				</View>
+						>
+							{item.content}
+						</Text>
+					</View>
+				))}
 			</ScrollView>
 		);
 	}
 }
 
 const styles = StyleSheet.create({
-	container: {
-		marginTop: 40,
-		paddingLeft: 15
-	},
-	titleContainer: {
-		marginBottom: 5
-	},
-	titleText: {
-		fontSize: 16,
-		fontWeight: '500'
-	},
 	listItemContainer: {
 		marginTop: 5,
 		marginBottom: 5,
