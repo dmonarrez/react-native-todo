@@ -39,7 +39,10 @@ export default class Main extends React.Component {
 	loadingItems = async () => {
 		try {
 			const allItems = await AsyncStorage.getItem('Todos');
-			this.setState({ loadingItems: true, allItems: JSON.parse(allItems) });
+			this.setState({
+				loadingItems: true,
+				allItems: JSON.parse(allItems) || {}
+			});
 		} catch (err) {
 			console.log(err);
 		}
