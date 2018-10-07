@@ -1,31 +1,26 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { StyleSheet, TextInput } from 'react-native';
 
 import { inputPlaceholder } from '../utils/Colors';
 
-class Input extends Component {
-	render() {
-		const { inputValue, onChangeText, onDoneAddItem } = this.props;
-		return (
-			<TextInput
-				style={styles.input}
-				value={inputValue}
-				onChangeText={onChangeText}
-				placeholder="Type here to add note."
-				placeholderTextColor={inputPlaceholder}
-				multiline={true}
-				autoCapitalize="sentences"
-				underlineColorAndroid="transparent"
-				selectionColor={'white'}
-				maxLength={30}
-				returnKeyType="done"
-				autoCorrect={false}
-				blurOnSubmit={true}
-				onSubmitEditing={onDoneAddItem}
-			/>
-		);
-	}
-}
+const Input = ({ inputValue, onChangeText, onDoneAddItem }) => (
+	<TextInput
+		style={styles.input}
+		value={inputValue}
+		onChangeText={onChangeText}
+		placeholder="Type here to add note."
+		placeholderTextColor={inputPlaceholder}
+		multiline={true}
+		autoCapitalize="sentences"
+		underlineColorAndroid="transparent"
+		selectionColor={'white'}
+		maxLength={30}
+		returnKeyType="done"
+		autoCorrect={false}
+		blurOnSubmit={true}
+		onSubmitEditing={onDoneAddItem}
+	/>
+);
 
 const styles = StyleSheet.create({
 	input: {

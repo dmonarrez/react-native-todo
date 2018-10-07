@@ -15,6 +15,7 @@ import Header from './components/Header';
 import SubTitle from './components/SubTitle';
 import Input from './components/Input';
 import List from './components/List';
+import Button from './components/Button';
 
 const headerTitle = 'Todo';
 
@@ -122,6 +123,15 @@ export default class Main extends React.Component {
 		});
 	};
 
+	deleteAllItems = async () => {
+		try {
+			await AsyncStorage.removeItem('Todos');
+			this.setState({ allItems: {} });
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
 	saveItems = newItem => {
 		const saveItem = AsyncStorage.setItem('Todos', JSON.stringify(newItem));
 	};
@@ -136,7 +146,7 @@ export default class Main extends React.Component {
 					<Header title={headerTitle} />
 				</View>
 				<View style={styles.inputContainer}>
-					<SubTitle subtitle={"What's Next"} />
+					<SubTitle subtitle={"What's Next?"} />
 					<Input
 						inputValue={inputValue}
 						onChangeText={this.newInputValue}
@@ -144,7 +154,13 @@ export default class Main extends React.Component {
 					/>
 				</View>
 				<View style={styles.list}>
-					<SubTitle subtitle={'Recent Notes'} />
+					<View style={styles.column}>
+						<SubTitle subtitle={'Recent Notes'} />
+						<View style={styles.deleteAllButton}>
+							<Button deleteAllItems={this.deleteAllItems} />
+						</View>
+					</View>
+
 					{loadingItems ? (
 						<ScrollView contentContainerStyle={styles.scrollableList}>
 							{Object.values(allItems)
@@ -182,9 +198,18 @@ const styles = StyleSheet.create({
 	list: {
 		flex: 1,
 		marginTop: 70,
-		paddingLeft: 15
+		paddingLeft: 15,
+		marginBottom: 10
 	},
 	scrollableList: {
 		marginTop: 15
+	},
+	column: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between'
+	},
+	deleteAllButton: {
+		marginRight: 40
 	}
 });

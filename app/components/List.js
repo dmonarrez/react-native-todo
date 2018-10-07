@@ -17,13 +17,9 @@ import {
 	deleteIconColor
 } from '../utils/Colors';
 
-const { height, width } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 class List extends Component {
-	state = {
-		isCompleted: false
-	};
-
 	onToggleCircle = () => {
 		const { isCompleted, id, completeItem, incompleteItem } = this.props;
 		if (isCompleted) {
@@ -88,7 +84,8 @@ const styles = StyleSheet.create({
 		height: width / 8,
 		alignItems: 'center',
 		justifyContent: 'space-between',
-		marginVertical: 5,
+		marginTop: 5,
+		marginBottom: 10,
 		...Platform.select({
 			ios: {
 				shadowColor: 'rgb(50,50,50)',
