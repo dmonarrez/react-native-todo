@@ -2,44 +2,43 @@ import React, { Component } from 'react';
 import {
 	View,
 	Text,
-	Dimensions,
 	StyleSheet,
+	Dimensions,
 	TouchableOpacity,
 	Platform
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-
 import {
 	itemListText,
 	itemListTextStrike,
 	circleInactive,
 	circleActive,
-	deleteIconColor
+	lighterWhite,
+	deleteItem
 } from '../utils/Colors';
 
-const { height, width } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 class List extends Component {
 	state = {
 		isCompleted: false
 	};
 
-	onToggleCircle = () => {
-		const { isCompleted, id, completeItem, incompleteItem } = this.props;
-		if (isCompleted) {
-			incompleteItem(id);
-		} else {
-			completeItem(id);
-		}
+	toggleListItem = () => {
+		this.setState(prevState => {
+			return {
+				isCompleted: !prevState.isCompleted
+			};
+		});
 	};
 
 	render() {
-		const { text, deleteItem, id, isCompleted } = this.props;
+		const { isCompleted } = this.state;
 
 		return (
-			<View style={styles.container}>
-				<View style={styles.column}>
-					<TouchableOpacity onPress={this.onToggleCircle}>
+			<View style={styles.listItemContainer}>
+				<View style={styles.rowContainer}>
+					<TouchableOpacity onPress={this.toggleListItem}>
 						<View
 							style={[
 								styles.circle,
@@ -60,35 +59,38 @@ class List extends Component {
 								: { color: itemListText }
 						]}
 					>
-						{text}
+						Item 1
 					</Text>
+					{isCompleted ? (
+						<View style={styles.button}>
+							<TouchableOpacity>
+								<MaterialIcons
+									name="delete-forever"
+									size={24}
+									color={deleteItem}
+								/>
+							</TouchableOpacity>
+						</View>
+					) : null}
 				</View>
-				{isCompleted ? (
-					<View style={styles.button}>
-						<TouchableOpacity onPressOut={() => deleteItem(id)}>
-							<MaterialIcons
-								name="delete-forever"
-								size={24}
-								color={deleteIconColor}
-							/>
-						</TouchableOpacity>
-					</View>
-				) : null}
 			</View>
 		);
 	}
 }
 
 const styles = StyleSheet.create({
-	container: {
-		width: width - 50,
+	listItemContainer: {
+		flex: 1,
 		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		marginTop: 5,
+		marginBottom: 5,
+		padding: 10,
+		width: width - 50,
+		height: 50,
 		borderRadius: 5,
 		backgroundColor: 'white',
-		height: width / 8,
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		marginVertical: 5,
 		...Platform.select({
 			ios: {
 				shadowColor: 'rgb(50,50,50)',
@@ -104,25 +106,25 @@ const styles = StyleSheet.create({
 			}
 		})
 	},
-	column: {
+	rowContainer: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		width: width / 1.5
-	},
-	text: {
-		fontWeight: '500',
-		fontSize: 16,
-		marginVertical: 15
+		justifyContent: 'space-around',
+		width: width / 2
 	},
 	circle: {
 		width: 30,
 		height: 30,
 		borderRadius: 15,
 		borderWidth: 3,
-		margin: 10
+		marginRight: 20
 	},
-	button: {
-		marginRight: 10
+	text: {
+		fontWeight: '500',
+		fontSize: 16
+	},
+	buttons: {
+		flexDirection: 'row'
 	}
 });
 

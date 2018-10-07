@@ -1,8 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, View, StatusBar } from 'react-native';
+import {
+	StyleSheet,
+	View,
+	StatusBar,
+	ActivityIndicator,
+	ScrollView,
+	AsyncStorage
+} from 'react-native';
 import { LinearGradient } from 'expo';
+import uuid from 'uuid/v1';
 
-import { gradientStart, gradientEnd } from './utils/Colors';
+import { primaryGradientArray } from './utils/Colors';
 import Header from './components/Header';
 import SubTitle from './components/SubTitle';
 import Input from './components/Input';
@@ -12,7 +20,14 @@ const headerTitle = 'Todo';
 
 export default class Main extends React.Component {
 	state = {
-		inputValue: ''
+		inputValue: '',
+		loadingItems: false,
+		allItems: {},
+		isCompleted: false
+	};
+
+	componentDidMount = () => {
+		this.loadingItems();
 	};
 
 	newInputValue = value => {
@@ -21,25 +36,129 @@ export default class Main extends React.Component {
 		});
 	};
 
-	render() {
+	loadingItems = async () => {
+		try {
+			const allItems = await AsyncStorage.getItem('Todos');
+			this.setState({ loadingItems: true, allItems: JSON.parse(allItems) });
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	onDoneAddItem = () => {
 		const { inputValue } = this.state;
+		if (inputValue !== '') {
+			this.setState(prevState => {
+				const id = uuid();
+				const newItemObject = {
+					[id]: {
+						id,
+						isCompleted: false,
+						text: inputValue,
+						createdAt: Date.now()
+					}
+				};
+				const newState = {
+					...prevState,
+					inputValue: '',
+					allItems: {
+						...prevState.allItems,
+						...newItemObject
+					}
+				};
+				this.saveItems(newState.allItems);
+				return { ...newState };
+			});
+		}
+	};
+
+	deleteItem = id => {
+		this.setState(prevState => {
+			const allItems = prevState.allItems;
+			delete allItems[id];
+			const newState = {
+				...prevState,
+				...allItems
+			};
+			this.saveItems(newState.allItems);
+			return { ...newState };
+		});
+	};
+
+	completeItem = id => {
+		this.setState(prevState => {
+			const newState = {
+				...prevState,
+				allItems: {
+					...prevState.allItems,
+					[id]: {
+						...prevState.allItems[id],
+						isCompleted: true
+					}
+				}
+			};
+			this.saveItems(newState.allItems);
+			return { ...newState };
+		});
+	};
+
+	incompleteItem = id => {
+		this.setState(prevState => {
+			const newState = {
+				...prevState,
+				allItems: {
+					...prevState.allItems,
+					[id]: {
+						...prevState.allItems[id],
+						isCompleted: false
+					}
+				}
+			};
+			this.saveItems(newState.allItems);
+			return { ...newState };
+		});
+	};
+
+	saveItems = newItem => {
+		const saveItem = AsyncStorage.setItem('Todos', JSON.stringify(newItem));
+	};
+
+	render() {
+		const { inputValue, loadingItems, allItems } = this.state;
+
 		return (
-			<LinearGradient
-				colors={[gradientStart, gradientEnd]}
-				style={styles.container}
-			>
+			<LinearGradient colors={primaryGradientArray} style={styles.container}>
 				<StatusBar barStyle="light-content" />
 				<View style={styles.centered}>
 					<Header title={headerTitle} />
 				</View>
 				<View style={styles.inputContainer}>
 					<SubTitle subtitle={"What's Next"} />
-					<Input inputValue={inputValue} onChangeText={this.newInputValue} />
+					<Input
+						inputValue={inputValue}
+						onChangeText={this.newInputValue}
+						onDoneAddItem={this.onDoneAddItem}
+					/>
 				</View>
-
 				<View style={styles.list}>
 					<SubTitle subtitle={'Recent Notes'} />
-					<List />
+					{loadingItems ? (
+						<ScrollView contentContainerStyle={styles.scrollableList}>
+							{Object.values(allItems)
+								.reverse()
+								.map(item => (
+									<List
+										key={item.id}
+										{...item}
+										deleteItem={this.deleteItem}
+										completeItem={this.completeItem}
+										incompleteItem={this.incompleteItem}
+									/>
+								))}
+						</ScrollView>
+					) : (
+						<ActivityIndicator size="large" color="white" />
+					)}
 				</View>
 			</LinearGradient>
 		);
@@ -61,5 +180,8 @@ const styles = StyleSheet.create({
 		flex: 1,
 		marginTop: 70,
 		paddingLeft: 15
+	},
+	scrollableList: {
+		marginTop: 15
 	}
 });

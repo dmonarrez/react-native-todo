@@ -5,7 +5,7 @@ import { inputPlaceholder } from '../utils/Colors';
 
 class Input extends Component {
 	render() {
-		const { inputValue, onChangeText } = this.props;
+		const { inputValue, onChangeText, onDoneAddItem } = this.props;
 		return (
 			<TextInput
 				style={styles.input}
@@ -17,11 +17,11 @@ class Input extends Component {
 				autoCapitalize="sentences"
 				underlineColorAndroid="transparent"
 				selectionColor={'white'}
-				maxLength={60}
+				maxLength={30}
 				returnKeyType="done"
 				autoCorrect={false}
 				blurOnSubmit={true}
-				onSubmitEditing={() => Keyboard.dismiss()}
+				onSubmitEditing={onDoneAddItem}
 			/>
 		);
 	}
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
 	input: {
 		paddingTop: 10,
 		paddingRight: 15,
-		fontSize: 30,
+		fontSize: 34,
 		color: 'white',
 		fontWeight: '500'
 	}
