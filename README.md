@@ -1,11 +1,13 @@
-# Todo Minimalist
+# Todo App Example
 
-Todo List Application for Minimalists.
+To run this app:
 
-## Instructions
+```shell
+# install all dependencies
 
-- Unzip the files
-- traverse to app directory using terminal
-- run command: npm install
-- to start this project: expo-cli start
-  - you will then have option to run this app in development either in ios or android mode
+npm install
+
+# to run
+
+expo-cli start
+```
