@@ -21,7 +21,7 @@ class List extends Component {
         <View style={styles.container}>
           <View style={styles.column}>
             <TouchableOpacity onPress={this.onToggleCircle}>
-              <View style{[styles.circle, isCompleted ? { borderColor: circleActive} : { borderColor: circleInactive }]} />
+              <View style={[ styles.circle, isCompleted ? { borderColor: circleActive } : { borderColor: circleInactive } ]} />
             </TouchableOpacity>
             <Text style ={[ styles.text, isCompleted ? { color: itemListTextStrike, textDecorationLine: 'line-through'} : { color: itemListText }]}>
               {text}
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   },
   
   column: {
-    flexDIrection: 'row',
+    flexDirection: 'row',
     alignItems: 'center',
     width: width / 1.5
   },
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   },
   
   circle: {
-    widht: 30,
+    width: 30,
     height: 30,
     borderRadius: 15,
     borderWidth: 3,

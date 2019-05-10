@@ -1,15 +1,26 @@
 import React from 'react';
-import { StyleSheet, Text, View, StatusBar, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, ActivityIndicator, ScrollView, AsyncStorage } from 'react-native';
 import { LinearGradient } from 'expo';
+import uuid from 'uuid/v1';
 import { primaryGradientArray } from './utils/Colors';
-import Header from './components/Header'
+import Header from './components/Header';
+import SubTitle from './components/SubTitle';
 import Input from './components/Input';
+import List from './components/List';
+import Button from './components/Button';
 
 const headerTitle = "To Do";
 
 export default class Main extends React.Component {
   state ={
-    inputValue: ''
+    inputValue: '',
+    loadingItems: false,
+    allItems: {},
+    isCompleted: false
+  };
+  
+  componentDidMount = () => {
+    this.loadingItems();
   };
   
   newInputValue = Value => {
@@ -18,8 +29,107 @@ export default class Main extends React.Component {
     });
   };
   
-	render() {
+  loadingItems = async () => {
+    try {
+      const allItems = await AsyncStorage.getItem('ToDos');
+      this.setState({
+        loadingItems: true,
+        allItems: JSON.parse(allItems) || {}
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  
+  onDoneAddItem = () => {
     const { inputValue } = this.state;
+    if (inputValue !== '') {
+      this.setState(prevState => {
+        const id = uuid();
+        const newItemObject = {
+          [id]: {
+            id,
+            isCompleted: false,
+            text: inputValue,
+            createdAt: Date.now()
+          }
+        };
+        const newState = {
+          ...prevState,
+          inputValue: '',
+          allItems: {
+            ...prevState.allItems,
+            ...newItemObject
+          }
+        };
+        this.saveItems(newState.allItems);
+        return { ...newState };
+      });
+    }
+  };
+  
+  deleteItem = id => {
+    this.setState(prevState => {
+      const allItems = prevState.allItems;
+      delete allItems[id];
+      const newState = {
+        ...prevState,
+        ...allItems
+      };
+      this.saveItems(newState.allItems);
+      return { ...newState };  
+    });
+  };
+  
+  completeItem = id => {
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        allItems: {
+          ...prevState.allItems,
+          [id]: {
+            ...prevState.allItems[id],
+            isCompleted: true
+          }
+        }
+      };
+      this.saveItems(newState.allItems);
+      return { ...newState };
+    });
+  };
+  
+  incompleteItem = id => {
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        allItems: {
+          ...prevState.allItems,
+          [id]: {
+            ...prevState.allItems[id],
+            isCompleted: false
+          }
+        }
+      };
+      this.saveItems(newState.allItems);
+      return { ...newState };
+    });
+  };
+  
+  deleteAllItems = async () => {
+    try {
+      await AsyncStorage.removeItem('ToDos');
+      this.setState({ allItems: {} });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  
+  saveItems = newItem => {
+    const saveItem = AsyncStorage.setItem('To Dos', JSON.stringify(newItem));
+  };
+  
+	render() {
+    const { inputValue, loadingItems, allItems } = this.state;
 		return(
 			<LinearGradient colors={primaryGradientArray} style={styles.container}>
         //status bar
@@ -30,36 +140,44 @@ export default class Main extends React.Component {
 				</View>
         //input
         <View style={styles.inputContainer}>
-          <Input inputValue={inputValue} onChangeText={this.newInputValue} />
+          <Input inputValue={inputValue} onChangeText={this.newInputValue} onDoneAddItem={this.onDoneAddItem} />
         </View>
         //list
         <View style={styles.list}>
-          <ScrollView contentContainerStyle={styles.scrollableList}>
-          {Object.values(allItems).reverse().map(item => (
-            <List 
-              key={item.id} 
-              {...item}
-              deleteItem={this.deleteItem}
-              completeItem={this.completeItem}
-              incompleteItem={this.incompleteItem} 
-            />
-          ))}
-          </ScrollView>
+          <View style={styles.column}>
+            <SubTitle subtitle={'Recent Notes'} />
+            <View style={styles.deleteAllButton}>
+              <Button deleteAllItems={this.deleteAllItems} />
+            </View>
+          </View>
+          {loadingItems ? (
+            <ScrollView contentContainerStyle={styles.scrollableList}>
+              {Object.values(allItems).reverse().map(item => (
+                  <List
+                    key={item.id}
+                    {...item}
+                    deleteItem={this.deleteItem}
+                    completeItem={this.completeItem}
+                    incompleteItem={this.incompleteItem}
+                  />
+                ))}
+            </ScrollView>
+          ) : (
+            <ActivityIndicator size="large" color="white" />
+          )}
         </View>
-        
-			</LinearGradient>
-		);
-	}
+      </LinearGradient>
+    );
+  }
 }
-
 const styles = StyleSheet.create({
-	container: {
-		flex: 1
-	},
-	
-	centered: {
-		alignItems: 'center'
-	},
+  container: {
+    flex: 1
+  },
+  
+  centered: {
+    alignItems: 'center'
+  },
   
   inputContainer: {
     marginTop: 40,
@@ -69,11 +187,21 @@ const styles = StyleSheet.create({
   list: {
     flex: 1,
     marginTop: 70,
-    marginBottom: 10,
-    paddingLeft: 15
+    paddingLeft: 15,
+    marginBottom: 10
   },
   
   scrollableList: {
     marginTop: 15
+  },
+  
+  column: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  
+  deleteAllButton: {
+    marginRight: 40
   }
 });
